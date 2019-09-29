@@ -181,4 +181,40 @@ describe('Articles Endpoints', () =>{
           })
       })
     })
+
+    describe.only(`DELETE /articles/:articles_id`, () =>{
+      context(`Given there are articles in the database`, () =>{
+        const testArticles = makeArticlesArray()
+
+        beforeEach('insert articles', () =>{
+          return db
+            .into('blogful_articles')
+            .insert(testArticles)
+        })
+
+        it(`responds with 204 and removes the article`, () =>{
+          const idToDelete = 2
+          const expectedArticles = testArticles.filter(article => article.id !== idToDelete)
+
+          return supertest(app)
+            .delete(`/articles/${idToDelete}`)
+            .expect(204)
+            .then(res =>
+              supertest(app)
+                .get(`/articles`)
+                .expect(expectedArticles)
+              )
+        })
+      })
+
+      context(`Given no articles`, () =>{
+        it(`responds with 404`, () =>{
+          const articleId = 123456
+
+          return supertest(app)
+            .delete(`/articles/${articleId}`)
+            .expect(404, {error: {message: `Article doesn't exist`}})
+        })
+      })
+    })
 })
