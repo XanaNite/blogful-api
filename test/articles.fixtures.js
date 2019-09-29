@@ -9,7 +9,7 @@ function makeArticlesArray() {
         },
         {
             id: 2,
-            date_published: new Date().toLocaleString('en', { timeZone: 'UTC' }),
+            date_published: '2029-01-22T16:28:32.615Z',
             title: 'Second test post!',
             style: 'News',
             content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum, exercitationem cupiditate dignissimos est perspiciatis, nobis commodi alias saepe atque facilis labore sequi deleniti. Sint, adipisci facere! Velit temporibus debitis rerum.'

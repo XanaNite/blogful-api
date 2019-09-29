@@ -1,4 +1,4 @@
-const ArticlesService = require('../src/articles-service')
+const ArticlesService = require('../src/articles/articles-service')
 const knex = require('knex')
 
 describe('Articles service object', () =>{
@@ -8,18 +8,21 @@ describe('Articles service object', () =>{
             id: 1,
             date_published: new Date(),
             title: 'First test post!',
+            style: 'News',
             content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non.Adipisci, pariatur.Molestiae, libero esse hic adipisci autem neque ?'
         },
         {
             id: 2,
             date_published: new Date(),
             title: 'Second test post!',
+            style: 'Listicle',
             content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum, exercitationem cupiditate dignissimos est perspiciatis, nobis commodi alias saepe atque facilis labore sequi deleniti. Sint, adipisci facere! Velit temporibus debitis rerum.'
         },
         {
             id: 3,
             date_published: new Date(),
             title: 'Third test post!',
+            style: 'How-to',
             content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus, voluptate? Necessitatibus, reiciendis? Cupiditate totam laborum esse animi ratione ipsa dignissimos laboriosam eos similique cumque. Est nostrum esse porro id quaerat.'
         }
     ]
@@ -63,6 +66,7 @@ describe('Articles service object', () =>{
                     expect(actual).to.eql({
                         id: thirdId,
                         title: thirdTestArticle.title,
+                        style: thirdTestArticle.style,
                         content: thirdTestArticle.content,
                         date_published: thirdTestArticle.date_published,
                     })
@@ -86,6 +90,7 @@ describe('Articles service object', () =>{
             const idOfArticleToUpdate = 3
             const newArticleData = {
                 title: 'updated title',
+                style: 'How-to',
                 content: 'updated content',
                 date_published: new Date(),
             }
@@ -116,6 +121,7 @@ describe('Articles service object', () =>{
             //tests ArticlesService.insertArticle()
             const newArticle = {
                 title: 'Test new title',
+                style: 'How-to',
                 content: 'test new content',
                 date_published: new Date(),
             }
@@ -125,6 +131,7 @@ describe('Articles service object', () =>{
                     expect(actual).to.eql({
                         id: 1,
                         title: newArticle.title,
+                        style: newArticle.style,
                         content: newArticle.content,
                         date_published: newArticle.date_published,
                     })
