@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const {NODE_ENV} = require('./config');
 const logger = require('./logger');
 //const uuid = require('uuid/v4');
+const ArticlesService = require('./articles-service')
 
 const app = express();
 
@@ -17,7 +18,7 @@ app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
 
-app.use(function validateBearerToken(req, res, next){
+/*app.use(function validateBearerToken(req, res, next){
     const apiToken = process.env.API_TOKEN;
     const authToken = req.get('Authorization');
 
@@ -26,6 +27,38 @@ app.use(function validateBearerToken(req, res, next){
         return res.status(401).json({error: 'Unauthorized request'})
     }
     next()
+})*/
+
+app.get('/articles', (req, res, next) =>{
+    const knexInstance = req.app.get('db')
+
+    ArticlesService.getAllArticles(knexInstance)
+        .then(articles =>{
+            res.json(articles.map(article => ({
+                id: article.id,
+                title: article.title,
+                style: article.style,
+                content: article.content,
+                date_published: new Date(article.date_published),
+            })))
+        })
+        .catch(next)
+})
+
+app.get('/articles/:article_id', (req, res, next) =>{
+    const knexInstance = req.app.get('db')
+
+    ArticlesService.getById(knexInstance, req.params.article_id)
+        .then(article =>{
+            res.json({
+                id: article.id,
+                title: article.title,
+                style: article.style,
+                content: article.content,
+                date_published: new Date(article.date_published),
+            })
+        })
+        .catch(next)
 })
 
 app.get('/', (req, res) =>{
