@@ -4,11 +4,12 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const {NODE_ENV} = require('./config');
-const logger = require('./logger');
+//const logger = require('./logger');
 //const uuid = require('uuid/v4');
 const ArticlesService = require('./articles-service')
 
 const app = express();
+const jsonParser = express.json()
 
 const morganOption = (NODE_ENV === 'production')
     ? 'tiny'
@@ -45,6 +46,23 @@ app.get('/articles', (req, res, next) =>{
         .catch(next)
 })
 
+app.post('/articles', jsonParser, (req, res, next) =>{
+    const {title, style, content} = req.body
+    const newArticle = {title, style, content}
+
+    ArticlesService.insertArticle(
+        req.app.get('db'),
+        newArticle
+    )
+        .then(article =>{
+            res
+                .status(201)
+                .location(`/articles/${article.id}`)
+                .json(article)
+        })
+        .catch(next)
+})
+
 app.get('/articles/:article_id', (req, res, next) =>{
     const knexInstance = req.app.get('db')
 
@@ -55,7 +73,7 @@ app.get('/articles/:article_id', (req, res, next) =>{
                     error: {message: `Article doesn't exist`}
                 })
             }
-            
+
             res.json({
                 id: article.id,
                 title: article.title,
