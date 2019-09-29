@@ -1,8 +1,17 @@
 const express = require('express')
+const xss = require('xss')
 const ArticlesService = require('./articles-service')
 
 const articlesRouter = express.Router()
 const jsonParser = express.json()
+
+const sanitizedArticle = article => ({
+    id: article.id,
+    style: article.style,
+    title: xss(article.title),
+    content: xss(article.content),
+    date_published: article.date_published,
+})
 
 articlesRouter
     .route('/')
@@ -11,7 +20,7 @@ articlesRouter
             req.app.get('db')
         )
             .then(articles =>{
-                res.json(articles)
+                res.json(articles.map(sanitizedArticle))
             })
             .catch(next)
     })
@@ -35,7 +44,7 @@ articlesRouter
                 res
                     .status(201)
                     .location(`/articles/${article.id}`)
-                    .json(article)
+                    .json(sanitizedArticle(article))
             })
             .catch(next)
     })
@@ -53,13 +62,7 @@ articlesRouter
                     })
                 }
     
-                res.json({
-                    id: article.id,
-                    title: article.title,
-                    style: article.style,
-                    content: article.content,
-                    date_published: new Date(article.date_published),
-                })
+                res.json(sanitizedArticle(article))
             })
             .catch(next)
     })
