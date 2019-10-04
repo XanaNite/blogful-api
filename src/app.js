@@ -7,6 +7,8 @@ const {NODE_ENV} = require('./config');
 //const logger = require('./logger');
 //const uuid = require('uuid/v4');
 const articlesRouter = require('./articles/articles-router')
+const usersRouter = require('./users/users-router')
+const commentsRouter = require('./comments/comments-router')
 
 const app = express();
 

@@ -3,7 +3,7 @@ const app = require('../src/app')
 const {makeArticlesArray, makeMaliciousArticle} = require('./articles.fixtures')
 
 describe('Articles Endpoints', () =>{
-    //tests for '/articles' endpoints
+    //tests for 'api/articles' endpoints
     let db 
 
     before('make knex instance', () =>{
@@ -182,7 +182,7 @@ describe('Articles Endpoints', () =>{
       })
     })
 
-    describe.only(`DELETE /articles/:articles_id`, () =>{
+    describe(`DELETE /articles/:articles_id`, () =>{
       context(`Given there are articles in the database`, () =>{
         const testArticles = makeArticlesArray()
 
